@@ -12,7 +12,7 @@ $mform = new simplehtml_form();
 if ($mform->is_cancelled()) {
     echo 'You Clicked Cancel';
 } else if ($fromform = $mform->get_data()) {
-
+    $context = \core\context\system::instance();
     $data = new stdClass;
     //
     $data->email = $fromform->email;
@@ -23,13 +23,20 @@ if ($mform->is_cancelled()) {
     $fullpath = "upload/".$file_name;
     $success = $mform->save_file('userfile', $fullpath,false);
     // add file
-    $data->file_path = $fullpath;
+    // $data->file_path = $fullpath;
     if(!$success)
     {
         echo 'something wrong';
     }
+    $insertId = $DB->insert_record('email_list',$data);
 
-    $DB->insert_record('email_list',$data);
+    file_save_draft_area_files(
+        $fromform->attachments,
+        $context->id,
+        'ram_component',
+        'ram_filearea',
+        $insertId
+    );
 
     redirect($redirect,'Record Created Sucessfully',null,\core\output\notification::NOTIFY_SUCCESS);
 

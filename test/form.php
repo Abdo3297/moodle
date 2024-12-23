@@ -13,6 +13,22 @@ class simplehtml_form extends moodleform
         $mform->setType('email', PARAM_NOTAGS);
         $mform->setDefault('email', 'Please enter email');
 
+        $maxbytes = get_max_upload_sizes();
+        $mform->addElement(
+            'filemanager',
+            'attachments',
+            'Attachment 1',
+            null,
+            [
+                'subdirs' => 0,
+                'maxbytes' => $maxbytes,
+                'areamaxbytes' => 10485760,
+                'maxfiles' => 2,
+                'accepted_types' => ['document'],
+                'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
+            ]
+        );
+        /*
         $mform->addElement(
             'filepicker',
             'userfile',
@@ -26,6 +42,7 @@ class simplehtml_form extends moodleform
                 ],
             ]
         );
+        */
 
         $this->add_action_buttons();
     }
